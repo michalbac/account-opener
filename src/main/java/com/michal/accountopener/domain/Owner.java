@@ -15,19 +15,19 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class User {
+public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @NotNull
-    private String userName;
+    private String name;
 
     @NotNull
     private String surname;
 
     @JsonManagedReference
-    @OneToMany(targetEntity = Account.class, mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Account.class, mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Account> accounts;
 
 }

@@ -28,8 +28,8 @@ public class Account {
     @NotNull
     private BigDecimal startingBalance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner_id")
     @JsonBackReference
-    private User user;
+    private Owner owner;
 }
