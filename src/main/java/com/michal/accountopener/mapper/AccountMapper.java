@@ -2,6 +2,7 @@ package com.michal.accountopener.mapper;
 
 import com.michal.accountopener.domain.Account;
 import com.michal.accountopener.domain.AccountDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +15,18 @@ public class AccountMapper {
     @Autowired
     OwnerMapper ownerMapper;
 
+    @Autowired
+    ModelMapper mapper;
+
     public Account mapToAccount(AccountDto accountDto){
-        return new Account(accountDto.getId(),
-                accountDto.getCurrency(),
-                accountDto.getStartingBalance(),
-                ownerMapper.mapToOwner(accountDto.getOwner()));
+        Account account = mapper.map(accountDto, Account.class);
+        return account;
     }
 
     public AccountDto mapToAccountDto(Account account){
-        return new AccountDto(account.getId(),
-                account.getCurrency(),
-                account.getStartingBalance(),
-                ownerMapper.mapToOwnerDto(account.getOwner()));
+        AccountDto accountDto =  mapper.map(account, AccountDto.class);
+        accountDto.setOwner(ownerMapper.mapToOwnerDto(account.getOwner()));
+        return accountDto;
     }
 
     public List<Account> mapToAccountList(List<AccountDto> accountDtoList){
@@ -33,10 +34,7 @@ public class AccountMapper {
             return new ArrayList<>();
         }
         return accountDtoList.stream()
-                .map(accountDto ->
-                        new Account(accountDto.getId(),
-                                accountDto.getCurrency(),accountDto.getStartingBalance(),
-                                ownerMapper.mapToOwner(accountDto.getOwner())))
+                .map(accountDto -> mapper.map(accountDto, Account.class))
                 .collect(Collectors.toList());
     }
 
@@ -45,10 +43,7 @@ public class AccountMapper {
             return new ArrayList<>();
         }
         return accountList.stream()
-                .map(account ->
-                        new AccountDto(account.getId(),
-                                account.getCurrency(),account.getStartingBalance(),
-                                ownerMapper.mapToOwnerDto(account.getOwner())))
+                .map(account -> mapper.map(account, AccountDto.class))
                 .collect(Collectors.toList());
     }
 }
