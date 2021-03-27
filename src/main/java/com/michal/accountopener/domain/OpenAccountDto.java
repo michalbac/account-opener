@@ -1,19 +1,19 @@
 package com.michal.accountopener.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class OwnerDto {
-    private long id;
+public class OpenAccountDto {
+    private BigDecimal startingBalance;
     private String name;
     private String surname;
-    private List<AccountDto> accounts;
+
 }

@@ -25,7 +25,7 @@ public class AccountMapper {
 
     public AccountDto mapToAccountDto(Account account){
         AccountDto accountDto =  mapper.map(account, AccountDto.class);
-        accountDto.setOwner(ownerMapper.mapToOwnerDto(account.getOwner()));
+//        accountDto.setOwnerId(account.getOwner().getId());
         return accountDto;
     }
 

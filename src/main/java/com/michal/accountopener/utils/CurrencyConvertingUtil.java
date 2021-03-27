@@ -1,6 +1,7 @@
 package com.michal.accountopener.utils;
 
 import com.michal.accountopener.domain.Account;
+import com.michal.accountopener.domain.AccountDto;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ public class CurrencyConvertingUtil {
         return amountInPln.multiply(exchangeRate);
     }
 
-    public static BigDecimal getBalanceInUsd(Account account, BigDecimal rate){
+    public static BigDecimal getBalanceInUsd(AccountDto account, BigDecimal rate){
         if (account.getCurrency().toString().equals("USD")){
             return account.getStartingBalance();
         } else if (account.getCurrency().equals("PLN")){
@@ -26,7 +27,7 @@ public class CurrencyConvertingUtil {
         return BigDecimal.ONE;
     }
 
-    public static BigDecimal getBalanceInPln(Account account, BigDecimal rate){
+    public static BigDecimal getBalanceInPln(AccountDto account, BigDecimal rate){
         if(account.getCurrency().toString().equals("PLN")){
             return account.getStartingBalance();
         } else if (account.getCurrency().equals("USD")){
