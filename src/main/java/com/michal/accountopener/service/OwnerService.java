@@ -38,6 +38,7 @@ public class OwnerService {
             owner = new Owner();
             owner.setName(name);
             owner.setSurname(surname);
+            ownerRepository.save(owner);
 
         }
         return  owner;

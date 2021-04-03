@@ -3,10 +3,12 @@ package com.michal.accountopener.controller;
 import com.michal.accountopener.domain.Account;
 import com.michal.accountopener.domain.AccountDto;
 import com.michal.accountopener.domain.OpenAccountDto;
+import com.michal.accountopener.domain.Owner;
 import com.michal.accountopener.mapper.AccountMapper;
 import com.michal.accountopener.mapper.OpenAccountMapper;
 import com.michal.accountopener.nbp.client.NbpClient;
 import com.michal.accountopener.service.AccountService;
+import com.michal.accountopener.service.OwnerService;
 import com.michal.accountopener.utils.CurrencyConvertingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +30,18 @@ public class AccountController {
     OpenAccountMapper openAccountMapper;
 
     @Autowired
+    OwnerService ownerService;
+
+    @Autowired
     NbpClient nbpClient;
-
-
 
     @PostMapping("/new")
     public AccountDto createAccount(@RequestBody OpenAccountDto accountDto){
-        return openAccountMapper.mapToAccountDto(accountDto);
+        Owner owner = ownerService.saveIfNotExists(accountDto.getName(), accountDto.getSurname());
+        Account account = openAccountMapper.mapToAccount(accountDto);
+        account.setOwner(owner);
+        accountService.save(account);
+        return accountMapper.mapToAccountDto(account);
     }
 
     @GetMapping("/{id}/pln")
@@ -44,7 +51,6 @@ public class AccountController {
             return accountDto.getStartingBalance();
         } else {
             return CurrencyConvertingUtil.getBalanceInPln(accountDto, nbpClient.getCurrentRate());
-
         }
     }
 
@@ -86,7 +92,10 @@ public class AccountController {
         return accountDto;
     }
 
-
+    @GetMapping("/{id}")
+    public AccountDto getAccountInfo(@PathVariable long id){
+        return accountMapper.mapToAccountDto(accountService.getAccount(id));
+    }
 
     @DeleteMapping("/{id}")
     public void deleteAccount(@PathVariable long id){

@@ -20,12 +20,13 @@ public class AccountMapper {
 
     public Account mapToAccount(AccountDto accountDto){
         Account account = mapper.map(accountDto, Account.class);
+        account.setOwner(ownerMapper.mapToOwner(accountDto.getOwner()));
         return account;
     }
 
     public AccountDto mapToAccountDto(Account account){
         AccountDto accountDto =  mapper.map(account, AccountDto.class);
-//        accountDto.setOwnerId(account.getOwner().getId());
+      accountDto.setOwner(ownerMapper.mapToOwnerDto(account.getOwner()));
         return accountDto;
     }
 
