@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -42,6 +43,14 @@ public class OwnerService {
 
         }
         return  owner;
+    }
+
+    public Owner findById(long id){
+        Optional<Owner> optional = ownerRepository.findById(id);
+        if(optional.isPresent()){
+            return optional.get();
+        }
+        return null;
     }
 
 

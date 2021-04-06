@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class OpenAccountMapperTest {
+public class OpenAccountMapperTestSuite {
     @Autowired
     OpenAccountMapper openAccountMapper;
 

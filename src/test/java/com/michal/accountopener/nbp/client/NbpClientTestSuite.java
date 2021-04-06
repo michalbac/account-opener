@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NbpClientTest {
+public class NbpClientTestSuite {
     @InjectMocks
     private NbpClient nbpClient;
 
@@ -34,8 +34,7 @@ public class NbpClientTest {
 
     @Before
     public void init(){
-        when(nbpConfig.getNbpApiEndpoint()).thenReturn("http://test.com");
-        when(nbpConfig.getCurrentUsdRateApiEndpoint()).thenReturn("http://test.com/api/exchangerates/rates/a/usd");
+       when(nbpConfig.getCurrentUsdRateApiEndpoint()).thenReturn("http://test.com/api/exchangerates/rates/a/usd");
     }
 
     @Test
