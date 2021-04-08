@@ -19,7 +19,6 @@ import java.util.Currency;
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-
     @Autowired
     AccountService accountService;
 
@@ -34,6 +33,9 @@ public class AccountController {
 
     @Autowired
     NbpClient nbpClient;
+
+    @Autowired
+    CurrencyConvertingUtil convertingUtil;
 
     @PostMapping("/new")
     public AccountDto createAccount(@RequestBody OpenAccountDto accountDto){
@@ -50,7 +52,7 @@ public class AccountController {
         if (accountDto.getCurrency().toString().equals("PLN")){
             return accountDto.getStartingBalance();
         } else {
-            return CurrencyConvertingUtil.getBalanceInPln(accountDto, nbpClient.getCurrentRate());
+            return convertingUtil.getBalanceInPln(accountDto, nbpClient.getCurrentRate());
         }
     }
 
@@ -60,34 +62,20 @@ public class AccountController {
         if (accountDto.getCurrency().toString().equals("USD")){
             return accountDto.getStartingBalance();
         } else {
-            return CurrencyConvertingUtil.getBalanceInUsd(accountDto, nbpClient.getCurrentRate());
+            return convertingUtil.getBalanceInUsd(accountDto, nbpClient.getCurrentRate());
         }
     }
 
     @GetMapping("convert/usd/{id}")
     public AccountDto convertAccountToUsd (@PathVariable long id){
-        Account account = accountService.getAccount(id);
-
-        if (account.getCurrency().toString().equals("PLN")){
-            BigDecimal balanceInPln = account.getStartingBalance();
-            BigDecimal balanceInUsd = CurrencyConvertingUtil.convertToUsd(balanceInPln, nbpClient.getCurrentRate());
-            account.setCurrency(Currency.getInstance("USD"));
-            account.setStartingBalance(balanceInUsd);
-        }
+        Account account = convertingUtil.convertToUsd(accountService.getAccount(id), nbpClient.getCurrentRate());
         AccountDto accountDto = accountMapper.mapToAccountDto(account);
         return accountDto;
     }
 
     @GetMapping("convert/pln/{id}")
     public AccountDto convertAccountToPln (@PathVariable long id){
-        Account account = accountService.getAccount(id);
-
-        if (account.getCurrency().toString().equals("USD")){
-            BigDecimal balanceInUsd = account.getStartingBalance();
-            BigDecimal balanceInPln = CurrencyConvertingUtil.convertToPln(balanceInUsd, nbpClient.getCurrentRate());
-            account.setCurrency(Currency.getInstance("PLN"));
-            account.setStartingBalance(balanceInPln);
-        }
+        Account account = convertingUtil.convertToPln(accountService.getAccount(id), nbpClient.getCurrentRate());
         AccountDto accountDto = accountMapper.mapToAccountDto(account);
         return accountDto;
     }
